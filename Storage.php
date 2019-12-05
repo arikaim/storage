@@ -16,12 +16,13 @@ use League\Flysystem\Filesystem;
 use Arikaim\Core\Utils\File;
 use Arikaim\Core\Utils\Utils;
 use Arikaim\Core\Utils\Path;
-use Arikaim\Core\Interfaces\EventDispatcherInterface;
+use Arikaim\Core\Interfaces\Events\EventDispatcherInterface;
+use Arikaim\Core\Interfaces\StorageInterface;
 
 /**
  * Storage module class
  */
-class Storage
+class Storage implements StorageInterface
 {
     /**
      * Mount manager obj ref

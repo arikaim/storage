@@ -10,7 +10,7 @@
 namespace Arikaim\Modules\Storage\Drivers;
 
 use Arikaim\Core\Driver\Traits\Driver;
-use Arikaim\Core\Interfaces\DriverInterface;
+use Arikaim\Core\Interfaces\Driver\DriverInterface;
 
 /**
  * Ftp flysystem driver class

@@ -44,6 +44,7 @@ class Storage implements StorageInterface
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->manager = new MountManager();
+        $this->eventDispatcher = $eventDispatcher;
         $this->boot();
     }
 

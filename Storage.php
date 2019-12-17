@@ -85,7 +85,7 @@ class Storage implements StorageInterface
      */
     public function mountLocal($name, $path = null)
     {
-        $path = (epty($path) == true) ? Path::STORAGE_PATH : $path;
+        $path = (empty($path) == true) ? Path::STORAGE_PATH : $path;
         $adapter = new Local($path);
 
         return $this->mount($name,$adapter);
@@ -114,7 +114,7 @@ class Storage implements StorageInterface
      * @param string $fileSystemName
      * @return string
      */
-    public function getFuillPath($path, $fileSystemName = 'storage')
+    public function getFuillPath($path = '', $fileSystemName = 'storage')
     {
         return $this->manager->getFilesystem($fileSystemName)->getAdapter()->getPathPrefix() . $path;
     }
@@ -247,7 +247,7 @@ class Storage implements StorageInterface
      */
     public function delete($path, $dispatchEvent = true)
     {
-        $result = ($this->get('storage')->has($path) == true) ? $this->get('storage')->delete($path) : true;
+        $result = ($this->has($path) == true) ? $this->get('storage')->delete($path) : false;
         if ($result == true && $dispatchEvent == true) {           
             $this->eventDispatcher->dispatch('core.storage.delete.file',$this->getEventParams($path));
         }
@@ -265,7 +265,7 @@ class Storage implements StorageInterface
      */
     public function rename($from, $to, $dispatchEvent = true)
     {
-        $result = ($this->get('storage')->has($from) == true) ? $this->get('storage')->rename($from,$to) : false;
+        $result = ($this->has($from) == true) ? $this->get('storage')->rename($from,$to) : false;
         if ($result == true && $dispatchEvent == true) { 
             $this->eventDispatcher->dispatch('core.storage.rename.file',$this->getEventParams($from,$to));
         }

@@ -282,7 +282,7 @@ class Storage implements StorageInterface
      */
     public function deleteDir($path, $dispatchEvent = true)
     {
-        $result = ($this->has($path) == true) ? $this->get('storage')->deleteDir($path) : true;
+        $result = ($this->has($path) == true) ? $this->get('storage')->deleteDir($path) : false;
         if ($result == true && $dispatchEvent == true) {            
             $this->eventDispatcher->dispatch('core.storage.delete.dir',$this->getEventParams($path));            
         }

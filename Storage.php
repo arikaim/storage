@@ -14,7 +14,6 @@ use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
 use Arikaim\Core\Utils\File;
-use Arikaim\Core\Utils\Utils;
 use Arikaim\Core\Utils\Path;
 use Arikaim\Core\Interfaces\Events\EventDispatcherInterface;
 use Arikaim\Core\Interfaces\StorageInterface;
@@ -108,28 +107,26 @@ class Storage implements StorageInterface
     }
 
     /**
+     * Get filesystem
+     *
+     * @param string $name
+     * @return object
+     */
+    public function get($name)
+    {
+        return $this->manager->getFilesystem($name);
+    }
+
+    /**
      * Get full file path
      *
-     * @param tring $path
+     * @param string $path
      * @param string $fileSystemName
      * @return string
      */
     public function getFuillPath($path = '', $fileSystemName = 'storage')
     {
-        return $this->manager->getFilesystem($fileSystemName)->getAdapter()->getPathPrefix() . $path;
-    }
-
-    /**
-     * Call methods on storage filesystem
-     *
-     * @param string $method
-     * @param mixed $args
-     * @return mixed
-     */
-    public function __call($method, $args) 
-    {
-        $storage = $this->get('storage');
-        return Utils::call($storage,$method,$args);       
+        return $this->get($fileSystemName)->getAdapter()->getPathPrefix() . $path;
     }
 
     /**
@@ -165,16 +162,12 @@ class Storage implements StorageInterface
      * @return bool
      */
     public function writeStream($path, $resource, $config = [], $dispatchEvent = true)
-    {
-        if ($this->has($path) == true) {
-            return $this->updateStream($path,$resource,$config);
-        } else {
-            $result = $this->get('storage')->writeStream($path,$resource,$config);
-            if ($result == true && $dispatchEvent == true) {              
-               $this->eventDispatcher->dispatch('core.storage.write.file',$this->getEventParams($path));               
-            }
+    {        
+        $result = $this->get('storage')->writeStream($path,$resource,$config);
+        if ($result == true && $dispatchEvent == true) {              
+            $this->eventDispatcher->dispatch('core.storage.write.file',$this->getEventParams($path));               
         }
-
+        
         return $result;
     }
 
@@ -224,7 +217,7 @@ class Storage implements StorageInterface
      */
     public function read($path)
     {
-        return ($this->has($path) == true) ? $this->get('storage')->read($path) : false;
+        return $this->get('storage')->read($path);
     }
 
     /**
@@ -235,7 +228,7 @@ class Storage implements StorageInterface
      */
     public function readStream($path)
     {
-        return ($this->has($path) == true) ? $this->get('storage')->readStream($path) : false;
+        return $this->get('storage')->readStream($path);
     }
 
     /**
@@ -247,11 +240,11 @@ class Storage implements StorageInterface
      */
     public function delete($path, $dispatchEvent = true)
     {
-        $result = ($this->has($path) == true) ? $this->get('storage')->delete($path) : false;
+        $result = $this->get('storage')->delete($path);   
         if ($result == true && $dispatchEvent == true) {           
             $this->eventDispatcher->dispatch('core.storage.delete.file',$this->getEventParams($path));
         }
-        
+      
         return $result;
     }
     
@@ -265,7 +258,7 @@ class Storage implements StorageInterface
      */
     public function rename($from, $to, $dispatchEvent = true)
     {
-        $result = ($this->has($from) == true) ? $this->get('storage')->rename($from,$to) : false;
+        $result = $this->get('storage')->rename($from,$to);
         if ($result == true && $dispatchEvent == true) { 
             $this->eventDispatcher->dispatch('core.storage.rename.file',$this->getEventParams($from,$to));
         }
@@ -282,7 +275,7 @@ class Storage implements StorageInterface
      */
     public function deleteDir($path, $dispatchEvent = true)
     {
-        $result = ($this->has($path) == true) ? $this->get('storage')->deleteDir($path) : false;
+        $result = $this->get('storage')->deleteDir($path);
         if ($result == true && $dispatchEvent == true) {            
             $this->eventDispatcher->dispatch('core.storage.delete.dir',$this->getEventParams($path));            
         }
@@ -299,7 +292,7 @@ class Storage implements StorageInterface
      */
     public function createDir($path, $dispatchEvent = true)
     {
-        $result =  $this->get('storage')->createDir($path);
+        $result = $this->get('storage')->createDir($path);
         if ($result == true && $dispatchEvent == true) {            
             $this->eventDispatcher->dispatch('core.storage.create.dir',$this->getEventParams($path));
         }
@@ -328,10 +321,6 @@ class Storage implements StorageInterface
      */
     public function copy($from, $to, $dispatchEvent = true)
     {
-        if ($this->has($from) == false) {
-            return false;
-        }
-     
         $result = $this->get('storage')->copy($from,$to);
         if ($result == true && $dispatchEvent == true) {            
             $this->eventDispatcher->dispatch('core.storage.copy.file',$this->getEventParams($from,$to));
@@ -360,17 +349,6 @@ class Storage implements StorageInterface
     public function getSize($path)
     {
         return $this->get('storage')->getSize($path);
-    }
-
-    /**
-     * Get filesystem
-     *
-     * @param string $name
-     * @return object
-     */
-    public function get($name)
-    {
-        return $this->manager->getFilesystem($name);
     }
 
     /**

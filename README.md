@@ -2,7 +2,7 @@
 ![version: 1.0.0](https://img.shields.io/github/release/arikaim/storage.svg)
 ![license: GPL3](https://img.shields.io/badge/License-GPLv3-blue.svg)
    
-Local storage package
+Storage package
   
   
 #### Requirements 
@@ -11,8 +11,6 @@ Local storage package
 
 #### Install
 
-```bash
-
+```sh
 composer require arikaim/storage
-
 ```

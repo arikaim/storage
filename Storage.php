@@ -130,6 +130,22 @@ class Storage implements StorageInterface
     }
 
     /**
+     * Get directory contents
+     *
+     * @param string $path
+     * @param boolean $recursive
+     * @return array|false
+     */
+    public function listContents($path, $recursive = false)
+    {
+        if ($this->has($path) == true) {
+            return $this->get('storage')->listContents($path,$recursive);
+        }
+
+        return false;
+    }
+
+    /**
      * Write files
      *
      * @param string $path

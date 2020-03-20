@@ -103,6 +103,7 @@ class Storage implements StorageInterface
             return false;
         }
         $filesystem = new Filesystem($adapter);
+        
         return $this->manager->mountFilesystem($name,$filesystem);
     }
 

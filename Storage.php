@@ -240,6 +240,29 @@ class Storage implements StorageInterface
     }
 
     /**
+     * Delete all files in direcotry (recursive)
+     *
+     * @param string $path
+     * @param string $fileSystemName
+     * @return void
+     */
+    public function deleteFiles($path, $fileSystemName = 'storage')
+    {
+        $files = $this->listContents($path,false,$fileSystemName);
+
+        foreach ($files as $item) {
+            if ($item['type'] == 'dir') {             
+                if ($this->has($item['path'],$fileSystemName) == true) {
+                    $this->deleteDir($path,$fileSystemName);
+                }
+            }           
+            if ($this->has($item['path'],$fileSystemName) == true) {
+                $this->delete($item['path'],$fileSystemName);
+            }            
+        }       
+    }
+
+    /**
      * Delete file from storage folder
      *
      * @param string $path

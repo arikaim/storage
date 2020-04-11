@@ -248,7 +248,7 @@ class Storage implements StorageInterface
      */
     public function deleteFiles($path, $fileSystemName = 'storage')
     {
-        $files = $this->listContents($path,false,$fileSystemName);
+        $files = $this->listContents($path,true,$fileSystemName);
 
         foreach ($files as $item) {
             if ($item['type'] == 'dir') {             
@@ -259,6 +259,24 @@ class Storage implements StorageInterface
             if ($this->has($item['path'],$fileSystemName) == true) {
                 $this->delete($item['path'],$fileSystemName);
             }            
+        }       
+    }
+
+    /**
+     * Move all files (recursive)
+     *
+     * @param string $path
+     * @param string $to
+     * @param string $fileSystemName
+     * @return void
+     */
+    public function moveFiles($from, $to, $fileSystemName = 'storage')
+    {
+        $files = $this->listContents($from,true,$fileSystemName);
+
+        foreach ($files as $item) {
+            $this->copy($item['path'],$to,$fileSystemName);
+            $this->delete($item['path'],$fileSystemName);                    
         }       
     }
 
@@ -352,6 +370,35 @@ class Storage implements StorageInterface
         }    
         
         return $this->delete($from,$fileSystemName);
+    }
+
+    /**
+     * Get file info
+     *
+     * @param string $path
+     * @param string $fileSystemName
+     * @return array
+     */
+    public function getMetadata($path, $fileSystemName = 'storage')
+    {
+        return $this->get($fileSystemName)->getMetadata($path);
+    }
+
+    /**
+     * Return true if file is directory
+     *
+     * @param string $path
+     * @param string $fileSystemName
+     * @return boolean
+     */
+    public function isDir($path, $fileSystemName = 'storage')
+    {
+        if ($this->has($path,$fileSystemName) == false) {
+            return false;
+        }
+        $meta = $this->getMetadata($path,$fileSystemName);
+
+        return ($meta['type'] == 'dir');
     }
 
     /**

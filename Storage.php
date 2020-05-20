@@ -89,7 +89,7 @@ class Storage implements StorageInterface
     }
 
     /**
-     * Mouny filesystem
+     * Mount filesystem
      *
      * @param string $name
      * @param object|string $adapter  Adapter object or driver name
@@ -101,7 +101,7 @@ class Storage implements StorageInterface
             return false;
         }
         $filesystem = new Filesystem($adapter);
-        
+      
         return $this->manager->mountFilesystem($name,$filesystem);
     }
 

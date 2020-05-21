@@ -166,7 +166,7 @@ class Storage implements StorageInterface
      */
     public function write($path, $contents, $config = [], $fileSystemName = 'storage')
     {
-        if ($this->has($path) == true) {
+        if ($this->has($path,$fileSystemName) == true) {
             return $this->update($path,$contents,$config,$fileSystemName);
         } 
         

@@ -97,7 +97,7 @@ class Storage implements StorageInterface
      */
     public function mount($name, $adapter)
     {
-        if (is_object($adapter) == false) {
+        if (\is_object($adapter) == false) {
             return false;
         }
         $filesystem = new Filesystem($adapter);
@@ -123,7 +123,7 @@ class Storage implements StorageInterface
      * @param string $fileSystemName
      * @return string
      */
-    public function getFuillPath($path = '', $fileSystemName = 'storage')
+    public function getFullPath($path = '', $fileSystemName = 'storage')
     {
         return $this->get($fileSystemName)->getAdapter()->getPathPrefix() . $path;
     }
@@ -453,6 +453,6 @@ class Storage implements StorageInterface
      */
     public function isSystemDir($path)
     {
-        return in_array($path,$this->systemDir);
+        return \in_array($path,$this->systemDir);
     }
 }

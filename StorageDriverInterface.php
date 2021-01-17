@@ -34,7 +34,7 @@ interface StorageDriverInterface
     /**
      * Check filesystem adapter connection
      *
-     * @return string|int
+     * @return mixed
      */
     public function checkConnection();
 

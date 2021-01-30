@@ -41,7 +41,7 @@ interface StorageDriverInterface
     /**
      * Get root path
      *
-     * @return string
+     * @return string|null
      */
-    public function getRootPath();
+    public function getRootPath(): ?string;
 }

@@ -38,7 +38,13 @@ class Storage implements StorageInterface
      *
      * @var array
      */
-    protected $systemDir = ['backup','public','repository','temp','bin'];
+    protected $systemDir = [
+        'backup',
+        'public',
+        'repository',
+        'temp',
+        'bin'
+    ];
     
     /**
      * Local filesystem names
@@ -125,9 +131,7 @@ class Storage implements StorageInterface
      */
     public function mountFilesystem(string $name, $filesystem): bool
     {
-        $result = $this->manager->mountFilesystem($name,$filesystem);
-
-        return \is_object($result);
+        return \is_object($this->manager->mountFilesystem($name,$filesystem));
     }
 
     /**
@@ -149,9 +153,8 @@ class Storage implements StorageInterface
      * @return string
      */
     public function getFullPath(string $path = '', ?string $fileSystemName = null): string
-    {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;
-        return $this->get($fileSystemName)->getAdapter()->getPathPrefix() . $path;
+    {      
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->getAdapter()->getPathPrefix() . $path;
     }
 
     /**
@@ -164,9 +167,7 @@ class Storage implements StorageInterface
      */
     public function listContents(string $path = '', bool $recursive = false, ?string $fileSystemName = null)
     {             
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;
-
-        return $this->get($fileSystemName)->listContents($path,$recursive);      
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->listContents($path,$recursive);      
     }
 
     /**
@@ -178,11 +179,7 @@ class Storage implements StorageInterface
      */
     public function isEmpty(string $path, ?string $fileSystemName = null): bool
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;
-
-        $files = $this->listContents($path,false,$fileSystemName);
-
-        return empty($files);
+        return empty($this->listContents($path,false,$fileSystemName ?? Self::ROOT_FILESYSTEM_NAME));
     }
 
     /**
@@ -236,9 +233,7 @@ class Storage implements StorageInterface
      */
     public function update(string $path, $contents, array $config = [], ?string $fileSystemName = null): bool
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;
-
-        return $this->get($fileSystemName)->update($path,$contents,$config);                  
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->update($path,$contents,$config);                  
     }
 
     /**
@@ -252,9 +247,7 @@ class Storage implements StorageInterface
      */
     public function updateStream(string $path, $resource, $config = [], ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;
-
-        return $this->get($fileSystemName)->updateStream($path,$resource,$config);              
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->updateStream($path,$resource,$config);              
     }
 
     /**
@@ -266,9 +259,7 @@ class Storage implements StorageInterface
      */
     public function read(string $path, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;
-
-        return $this->get($fileSystemName)->read($path);
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->read($path);
     }
 
     /**
@@ -280,9 +271,7 @@ class Storage implements StorageInterface
      */
     public function readStream(string $path, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;
-
-        return $this->get($fileSystemName)->readStream($path);
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->readStream($path);
     }
 
     /**
@@ -338,9 +327,7 @@ class Storage implements StorageInterface
      */
     public function delete(string $path, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;  
-
-        return $this->get($fileSystemName)->delete($path);           
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->delete($path);           
     }
     
     /**
@@ -353,9 +340,7 @@ class Storage implements StorageInterface
      */
     public function rename(string $from, string $to, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;  
-
-        return $this->get($fileSystemName)->rename($from,$to);        
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->rename($from,$to);        
     }
 
     /**
@@ -367,9 +352,7 @@ class Storage implements StorageInterface
      */
     public function deleteDir(string $path, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;  
-
-        return $this->get($fileSystemName)->deleteDir($path);      
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->deleteDir($path);      
     }
 
     /**
@@ -381,9 +364,7 @@ class Storage implements StorageInterface
      */
     public function createDir(string $path, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;  
-
-        return $this->get($fileSystemName)->createDir($path);                   
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->createDir($path);                   
     }
 
     /**
@@ -395,9 +376,7 @@ class Storage implements StorageInterface
      */
     public function has(string $path, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;  
-
-        return $this->get($fileSystemName)->has($path);
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->has($path);
     }
 
     /**
@@ -410,9 +389,7 @@ class Storage implements StorageInterface
      */
     public function copy(string $from, string $to, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;  
-
-        return $this->get($fileSystemName)->copy($from,$to);       
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->copy($from,$to);       
     }
 
     /**
@@ -444,9 +421,7 @@ class Storage implements StorageInterface
      */
     public function getMetadata(string $path, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;  
-
-        return $this->get($fileSystemName)->getMetadata($path);
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->getMetadata($path);
     }
 
     /**
@@ -477,9 +452,7 @@ class Storage implements StorageInterface
      */
     public function getMimetype(string $path, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME;  
-
-        return $this->get($fileSystemName)->getMimetype($path);
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->getMimetype($path);
     }
 
     /**
@@ -491,9 +464,7 @@ class Storage implements StorageInterface
      */
     public function getSize(string $path, ?string $fileSystemName = null)
     {
-        $fileSystemName = $fileSystemName ?? Self::ROOT_FILESYSTEM_NAME; 
-
-        return $this->get($fileSystemName)->getSize($path);
+        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->getSize($path);
     }
 
     /**

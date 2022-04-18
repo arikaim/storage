@@ -71,7 +71,7 @@ class Storage implements StorageInterface
     }
 
     /**
-     * Get error message
+     * Get error
      *
      * @return string|null
      */
@@ -277,7 +277,13 @@ class Storage implements StorageInterface
      */
     public function read(string $path, ?string $fileSystemName = null)
     {
-        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->read($path);
+        try {
+            $this->errorMessage = null;
+            return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->read($path);
+        } catch (Exception $e) {
+            $this->errorMessage = $e->getMessage();
+            return false;
+        }
     }
 
     /**
@@ -289,7 +295,14 @@ class Storage implements StorageInterface
      */
     public function readStream(string $path, ?string $fileSystemName = null)
     {
-        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->readStream($path);
+        try {
+            $this->errorMessage = null;
+            return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->readStream($path);
+        } catch (Exception $e) {
+            $this->errorMessage = $e->getMessage();
+            return false;
+        }
+       
     }
 
     /**

@@ -406,7 +406,11 @@ class Storage implements StorageInterface
      */
     public function has(string $path, ?string $fileSystemName = null): bool
     {
-        return (bool)$this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->has($path);
+        try {
+            return (bool)$this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->has($path);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**

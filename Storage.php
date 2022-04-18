@@ -16,6 +16,7 @@ use League\Flysystem\Filesystem;
 use Arikaim\Core\Utils\File;
 use Arikaim\Core\Utils\Path;
 use Arikaim\Core\Interfaces\StorageInterface;
+use Exception;
 
 /**
  * Storage module class
@@ -54,12 +55,29 @@ class Storage implements StorageInterface
     protected $localFilesystems = ['storage','user-storage'];
 
     /**
+     * Error message
+     *
+     * @var string|null
+     */
+    protected $errorMessage = null;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->manager = new MountManager();
         $this->boot();
+    }
+
+    /**
+     * Get error message
+     *
+     * @return string|null
+     */
+    public function getMessage(): ?string
+    {
+        return $this->errorMessage;
     }
 
     /**
@@ -416,11 +434,17 @@ class Storage implements StorageInterface
      *
      * @param string $path
      * @param string|null $fileSystemName
-     * @return array
+     * @return array|false
      */
     public function getMetadata(string $path, ?string $fileSystemName = null)
     {
-        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->getMetadata($path);
+        try {
+            $this->errorMessage = null;
+            return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->getMetadata($path);
+        } catch (Exception $e) {
+            $this->errorMessage = $e->getMessage();
+            return false;
+        }
     }
 
     /**
@@ -451,7 +475,13 @@ class Storage implements StorageInterface
      */
     public function getMimetype(string $path, ?string $fileSystemName = null)
     {
-        return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->getMimetype($path);
+        try {
+            $this->errorMessage = null;
+            return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->getMimetype($path);
+        } catch (\Exception $e) {
+            $this->errorMessage = $e->getMessage();
+            return false;
+        }
     }
 
     /**

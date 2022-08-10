@@ -13,7 +13,6 @@ use League\Flysystem\MountManager;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
-use Arikaim\Core\Utils\File;
 use Arikaim\Core\Utils\Path;
 use Arikaim\Core\Interfaces\StorageInterface;
 use Exception;
@@ -87,11 +86,11 @@ class Storage implements StorageInterface
      */
     public function install(): bool
     {
-        if (File::exists(Path::STORAGE_PATH) == false) {
-            File::makeDir(Path::STORAGE_PATH);
+        if (\file_exists(Path::STORAGE_PATH) == false) {
+            \mkdir(Path::STORAGE_PATH,0755,true);
         };
-        if (File::exists(Path::STORAGE_PATH . 'repository') == false) {
-            File::makeDir(Path::STORAGE_PATH . 'repository');
+        if (\file_exists(Path::STORAGE_PATH . 'repository') == false) {
+            \mkdir(Path::STORAGE_PATH . 'repository',0755,true);           
         };
 
         return true;
@@ -135,9 +134,8 @@ class Storage implements StorageInterface
         if (\is_object($adapter) == false) {
             return false;
         }
-        $filesystem = new Filesystem($adapter);
       
-        return $this->manager->mountFilesystem($name,$filesystem);
+        return $this->manager->mountFilesystem($name,new Filesystem($adapter));
     }
 
     /**

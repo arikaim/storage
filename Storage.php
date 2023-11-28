@@ -70,6 +70,19 @@ class Storage implements StorageInterface
     }
 
     /**
+     * Get relative storage path
+     *
+     * @param boolean $public
+     * @return string
+     */
+    public function getStorageRelativePath(bool $public = false): string
+    {
+        return ($public == false) ? 
+            Path::getRelativePath(Path::STORAGE_PATH,false) :
+            Path::getRelativePath(Path::STORAGE_PUBLIC_PATH,false);
+    }
+
+    /**
      * Get error
      *
      * @return string|null
@@ -154,9 +167,9 @@ class Storage implements StorageInterface
      * Get filesystem
      *
      * @param string $name
-     * @return \League\Flysystem\FilesystemInterface
+     * @return \League\Flysystem\FilesystemInterface|null
      */
-    public function get(string $name)
+    public function get(string $name): ?object
     {
         return $this->manager->getFilesystem($name);
     }

@@ -115,9 +115,8 @@ class Storage implements StorageInterface
      * @return void
      */
     public function boot(): void
-    {
-        $localAdapter = new Local(Path::STORAGE_PATH);
-        $this->mount(Self::ROOT_FILESYSTEM_NAME,$localAdapter);      
+    {     
+        $this->mount(Self::ROOT_FILESYSTEM_NAME,$this->createLocal());      
     }
 
     /**
@@ -130,9 +129,8 @@ class Storage implements StorageInterface
     public function mountLocal(string $name, ?string $path = null)
     {
         $path = (empty($path) == true) ? Path::STORAGE_PATH : $path;
-        $adapter = new Local($path);
-
-        return $this->mount($name,$adapter);
+     
+        return $this->mount($name,$this->createLocal());
     }
 
     /**
@@ -167,7 +165,7 @@ class Storage implements StorageInterface
      * Get filesystem
      *
      * @param string $name
-     * @return \League\Flysystem\FilesystemInterface|null
+     * @return object|null
      */
     public function get(string $name): ?object
     {
@@ -506,7 +504,7 @@ class Storage implements StorageInterface
         try {
             $this->errorMessage = null;
             return $this->get($fileSystemName ?? Self::ROOT_FILESYSTEM_NAME)->getMimetype($path);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->errorMessage = $e->getMessage();
             return false;
         }
@@ -599,4 +597,27 @@ class Storage implements StorageInterface
     {
         return ($relative == true) ? 'public' . DIRECTORY_SEPARATOR : Path::STORAGE_PUBLIC_PATH;
     } 
+
+    /**
+     * Create local adapter
+     * @return Local
+     */
+    protected function createLocal(): object
+    {
+        return new Local(
+            Path::STORAGE_PATH,
+            LOCK_EX,
+            Local::DISALLOW_LINKS,
+            [
+                'file' => [
+                    'public'  => 0644,
+                    'private' => 0600,
+                ],
+                'dir' => [
+                    'public'  => 0777,
+                    'private' => 0755,
+                ]
+            ]
+        );
+    }
 }
